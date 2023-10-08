@@ -5,7 +5,7 @@ Subject: [PATCH] Swaps-the-predicate-order-of-collision
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 004c633886d6f2964d6ff8f3529e49024eb5f8f3..53dceb4df4534f2409d19c1399e171ef26358e60 100644
+index ae3065fb234f9011b600ca00ec464856d59028f4..ac1df230416a6cb94241f2a60e5e19930319ba48 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -1408,8 +1408,9 @@ public abstract class Entity implements ICommandListener, KeyedObject { // Paper

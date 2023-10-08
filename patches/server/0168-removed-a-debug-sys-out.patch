@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: bierdosenhalter <529651+bierdosenhalter@users.noreply.github.com>
+Date: Sun, 8 Oct 2023 22:00:42 +0200
+Subject: [PATCH] removed a debug sys out
+
+
+diff --git a/src/main/java/net/minecraft/server/ItemWorldMap.java b/src/main/java/net/minecraft/server/ItemWorldMap.java
+index 81012a2915ed8cc6e0b4f32ec97bbd89859884bb..18075625d4ed81e8f1ddbf101ae17b7c65213573 100644
+--- a/src/main/java/net/minecraft/server/ItemWorldMap.java
++++ b/src/main/java/net/minecraft/server/ItemWorldMap.java
+@@ -29,7 +29,6 @@ public class ItemWorldMap extends ItemWorldMapBase {
+         NBTTagCompound itemCompound = (itemstack.hasTag()) ? itemstack.getTag() : new NBTTagCompound();
+         itemCompound.setLong("mapId", mapId);
+         itemstack.setTag(itemCompound);
+-        System.out.println("new map tag " + itemstack.getTag().get("mapId") + " " + mapId);
+         String s = "map_" + mapId;
+         // Zeronysus end
+ 

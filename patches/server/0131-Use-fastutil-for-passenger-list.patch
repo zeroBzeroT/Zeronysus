@@ -5,7 +5,7 @@ Subject: [PATCH] Use fastutil for passenger list
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 53dceb4df4534f2409d19c1399e171ef26358e60..b7df8035ca388beac149ce8f95daa4d4e64cba93 100644
+index ac1df230416a6cb94241f2a60e5e19930319ba48..daf704413c4dfc524fc5e52324d7c2caf02cbee7 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -45,6 +45,10 @@ import org.bukkit.event.entity.EntityPortalEvent;

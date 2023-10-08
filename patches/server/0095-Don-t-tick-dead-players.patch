@@ -5,7 +5,7 @@ Subject: [PATCH] Don-t-tick-dead-players
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index f43809b13f5f04c5fd74cfecae57492f3efefd53..21d3d8bcdc79107195cbaa9e99442331112dd829 100644
+index cb85e8c94015af53345e1a520b58dca1c43ab304..eccf7902a35a3e28f229ca5861f26760ccea8b36 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -781,7 +781,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {

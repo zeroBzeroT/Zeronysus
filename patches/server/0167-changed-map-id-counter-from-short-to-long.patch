@@ -1,0 +1,242 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: bierdosenhalter <529651+bierdosenhalter@users.noreply.github.com>
+Date: Sun, 8 Oct 2023 21:50:43 +0200
+Subject: [PATCH] changed map id counter from short to long
+
+
+diff --git a/src/main/java/net/minecraft/server/ItemWorldMap.java b/src/main/java/net/minecraft/server/ItemWorldMap.java
+index e0799ff00b807ff31f795f7578eb948a004aafdc..81012a2915ed8cc6e0b4f32ec97bbd89859884bb 100644
+--- a/src/main/java/net/minecraft/server/ItemWorldMap.java
++++ b/src/main/java/net/minecraft/server/ItemWorldMap.java
+@@ -18,8 +18,21 @@ public class ItemWorldMap extends ItemWorldMapBase {
+ 
+     public static ItemStack a(World world, double d0, double d1, byte b0, boolean flag, boolean flag1) {
+         World worldMain = world.getServer().getServer().worlds.get(0); // CraftBukkit - store reference to primary world
+-        ItemStack itemstack = new ItemStack(Items.FILLED_MAP, 1, worldMain.b("map")); // CraftBukkit - use primary world for maps
+-        String s = "map_" + itemstack.getData();
++
++        // Zeronysus start
++        Long mapId = worldMain.b("map");
++        ItemStack itemstack = new ItemStack(Items.FILLED_MAP, 1, (short)(mapId % 32767)); // CraftBukkit - use primary world for maps
++        itemstack.g("Map #" + mapId);
++        NBTTagList loreList = new NBTTagList();
++        loreList.add(new NBTTagString("Map #" + mapId));
++        itemstack.c("display").set("Lore", loreList);
++        NBTTagCompound itemCompound = (itemstack.hasTag()) ? itemstack.getTag() : new NBTTagCompound();
++        itemCompound.setLong("mapId", mapId);
++        itemstack.setTag(itemCompound);
++        System.out.println("new map tag " + itemstack.getTag().get("mapId") + " " + mapId);
++        String s = "map_" + mapId;
++        // Zeronysus end
++
+         WorldMap worldmap = new WorldMap(s);
+ 
+         worldMain.a(s, (PersistentBase) worldmap); // CraftBukkit
+@@ -36,12 +49,33 @@ public class ItemWorldMap extends ItemWorldMapBase {
+     @Nullable
+     public WorldMap getSavedMap(ItemStack itemstack, World world) {
+         World worldMain = world.getServer().getServer().worlds.get(0); // CraftBukkit - store reference to primary world
+-        String s = "map_" + itemstack.getData();
++
++        // Zeronysus start
++        long mapId = itemstack.getData();
++
++        if (itemstack.hasTag()) {
++            NBTBase nbtbase = itemstack.getTag().get("mapId");
++
++            if (nbtbase instanceof NBTTagLong) {
++                mapId = ((NBTTagLong) nbtbase).d();
++            }
++        }
++
++        String s = "map_" + mapId;
++        // Zeronysus end
++
+         WorldMap worldmap = (WorldMap) worldMain.a(WorldMap.class, s); // CraftBukkit - use primary world for maps
+ 
+         if (worldmap == null && !world.isClientSide) {
+-            itemstack.setData(worldMain.b("map")); // CraftBukkit - use primary world for maps
+-            s = "map_" + itemstack.getData();
++            // Zeronysus start
++            mapId = worldMain.b("map");
++            itemstack.setData((short)(mapId % 32767)); // CraftBukkit - use primary world for maps
++            NBTTagCompound itemCompound = (itemstack.hasTag()) ? itemstack.getTag() : new NBTTagCompound();
++            itemCompound.setLong("mapId", mapId);
++            itemstack.setTag(itemCompound);
++            s = "map_" + mapId;
++            // Zeronysus end
++
+             worldmap = new WorldMap(s);
+             worldmap.scale = 3;
+             worldmap.a((double) world.getWorldData().b(), (double) world.getWorldData().d(), worldmap.scale);
+@@ -324,8 +358,15 @@ public class ItemWorldMap extends ItemWorldMapBase {
+         WorldMap worldmap = Items.FILLED_MAP.getSavedMap(itemstack, world);
+ 
+         world = world.getServer().getServer().worlds.get(0); // CraftBukkit - use primary world for maps
+-        itemstack.setData(world.b("map"));
+-        WorldMap worldmap1 = new WorldMap("map_" + itemstack.getData());
++
++        // Zeronysus start
++        Long mapId = world.b("map");
++        itemstack.setData((short)(mapId % 32767));
++        NBTTagCompound itemCompound = (itemstack.hasTag()) ? itemstack.getTag() : new NBTTagCompound();
++        itemCompound.setLong("mapId", mapId);
++        itemstack.setTag(itemCompound);
++        WorldMap worldmap1 = new WorldMap("map_" + mapId);
++        // Zeronysus end
+ 
+         if (worldmap != null) {
+             worldmap1.scale = (byte) MathHelper.clamp(worldmap.scale + i, 0, 4);
+@@ -333,7 +374,11 @@ public class ItemWorldMap extends ItemWorldMapBase {
+             worldmap1.a((double) worldmap.centerX, (double) worldmap.centerZ, worldmap1.scale);
+             worldmap1.map = worldmap.map;
+             worldmap1.c();
+-            world.a("map_" + itemstack.getData(), (PersistentBase) worldmap1);
++
++            // Zeronysus start
++            world.a("map_" + mapId, (PersistentBase) worldmap1);
++            // Zeronysus end
++
+             // CraftBukkit start
+             MapInitializeEvent event = new MapInitializeEvent(worldmap1.mapView);
+             Bukkit.getServer().getPluginManager().callEvent(event);
+@@ -346,8 +391,15 @@ public class ItemWorldMap extends ItemWorldMapBase {
+         WorldMap worldmap = Items.FILLED_MAP.getSavedMap(itemstack, world);
+ 
+         world = world.getServer().getServer().worlds.get(0); // CraftBukkit - use primary world for maps
+-        itemstack.setData(world.b("map"));
+-        WorldMap worldmap1 = new WorldMap("map_" + itemstack.getData());
++
++        // Zeronysus start
++        Long mapId = world.b("map");
++        itemstack.setData((short)(mapId % 32767));
++        NBTTagCompound itemCompound = (itemstack.hasTag()) ? itemstack.getTag() : new NBTTagCompound();
++        itemCompound.setLong("mapId", mapId);
++        itemstack.setTag(itemCompound);
++        WorldMap worldmap1 = new WorldMap("map_" + mapId);
++        // Zeronysus end
+ 
+         worldmap1.track = true;
+         if (worldmap != null) {
+@@ -356,7 +408,11 @@ public class ItemWorldMap extends ItemWorldMapBase {
+             worldmap1.scale = worldmap.scale;
+             worldmap1.map = worldmap.map;
+             worldmap1.c();
+-            world.a("map_" + itemstack.getData(), (PersistentBase) worldmap1);
++
++            // Zeronysus start
++            world.a("map_" + mapId, (PersistentBase) worldmap1);
++            // Zeronysus end
++
+             // CraftBukkit start
+             MapInitializeEvent event = new MapInitializeEvent(worldmap1.mapView);
+             Bukkit.getServer().getPluginManager().callEvent(event);
+diff --git a/src/main/java/net/minecraft/server/PersistentCollection.java b/src/main/java/net/minecraft/server/PersistentCollection.java
+index 50056f49a8eaea687d00175e41a877040934e9ae..b34a53e7ea4e66365c39fa25fbd3551dabc0dc9b 100644
+--- a/src/main/java/net/minecraft/server/PersistentCollection.java
++++ b/src/main/java/net/minecraft/server/PersistentCollection.java
+@@ -21,7 +21,7 @@ public class PersistentCollection {
+     private final IDataManager b;
+     protected Map<String, PersistentBase> a = Maps.newHashMap();
+     public final List<PersistentBase> c = Lists.newArrayList(); // Spigot
+-    private final Map<String, Short> d = Maps.newHashMap();
++    private final Map<String, Long> d = Maps.newHashMap(); // Zeronysus
+ 
+     public PersistentCollection(IDataManager idatamanager) {
+         this.b = idatamanager;
+@@ -130,11 +130,13 @@ public class PersistentCollection {
+                     String s = (String) iterator.next();
+                     NBTBase nbtbase = nbttagcompound.get(s);
+ 
+-                    if (nbtbase instanceof NBTTagShort) {
++                    if (nbtbase instanceof NBTTagLong nbttaglong) {
++                        this.d.put(s, nbttaglong.d()); // Zeronysus
++                    } else if (nbtbase instanceof NBTTagShort) {
+                         NBTTagShort nbttagshort = (NBTTagShort) nbtbase;
+                         short short0 = nbttagshort.f();
+ 
+-                        this.d.put(s, Short.valueOf(short0));
++                        this.d.put(s, Long.valueOf(short0)); // Zeronysus
+                     }
+                 }
+             }
+@@ -144,18 +146,23 @@ public class PersistentCollection {
+ 
+     }
+ 
+-    public int a(String s) {
+-        Short oshort = (Short) this.d.get(s);
++    // Zeronysus start
++    public long a(String s) {
++        Long olong = this.d.get(s);
+ 
+-        if (oshort == null) {
+-            oshort = Short.valueOf((short) 0);
++        if (olong == null) {
++            olong = 0L;
+         } else {
+-            oshort = Short.valueOf((short) (oshort.shortValue() + 1));
++            olong = olong + 1L;
+         }
+ 
+-        this.d.put(s, oshort);
++        if(olong < 0L) {
++            olong = 0L;
++        }
++
++        this.d.put(s, olong);
+         if (this.b == null) {
+-            return oshort.shortValue();
++            return olong;
+         } else {
+             try {
+                 File file = this.b.getDataFile("idcounts");
+@@ -167,7 +174,7 @@ public class PersistentCollection {
+                     while (iterator.hasNext()) {
+                         String s1 = (String) iterator.next();
+ 
+-                        nbttagcompound.setShort(s1, ((Short) this.d.get(s1)).shortValue());
++                        nbttagcompound.setLong(s1, this.d.get(s1));
+                     }
+ 
+                     DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
+@@ -179,7 +186,8 @@ public class PersistentCollection {
+                 exception.printStackTrace();
+             }
+ 
+-            return oshort.shortValue();
++            return olong;
+         }
+     }
++    // Zeronysus end
+ }
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index cc9f467cc85704d536545aa63985340013e63703..27bea26b4af5b175936ef121433c8186163ff3a8 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -3181,8 +3181,8 @@ public abstract class World implements IBlockAccess {
+         return this.worldMaps.get(oclass, s);
+     }
+ 
+-    public int b(String s) {
+-        return this.worldMaps.a(s);
++    public long b(String s) {
++        return this.worldMaps.a(s); // Zeronysus
+     }
+ 
+     public void a(int i, BlockPosition blockposition, int j) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/map/CraftMapView.java b/src/main/java/org/bukkit/craftbukkit/map/CraftMapView.java
+index b951bfda3f221936f5e17ac4a676decc0cdb1dbe..2444d9fc8313cdda0c1c6ffce977d2a369bc7711 100644
+--- a/src/main/java/org/bukkit/craftbukkit/map/CraftMapView.java
++++ b/src/main/java/org/bukkit/craftbukkit/map/CraftMapView.java
+@@ -32,7 +32,9 @@ public final class CraftMapView implements MapView {
+         String text = worldMap.id;
+         if (text.startsWith("map_")) {
+             try {
+-                return Short.parseShort(text.substring("map_".length()));
++                // Zeronysus start
++                return (short)(Long.parseLong(text.substring("map_".length())) % 32767);
++                // Zeronysus end
+             }
+             catch (NumberFormatException ex) {
+                 throw new IllegalStateException("Map has non-numeric ID");

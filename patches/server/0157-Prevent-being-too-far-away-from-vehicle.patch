@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent being too far away from vehicle
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index b31176eed035fc9d6ccabaf446ca79f79df6e490..bdcf2321521804c984ca134a453186561e63f9ce 100644
+index 433faa8cf7c06525356e8dd6cdd91251e77bcfc7..fba64d34f0bc4cb7ffb55cd48fcf2f8a7f489877 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -3000,10 +3000,23 @@ public abstract class Entity implements ICommandListener, KeyedObject { // Paper

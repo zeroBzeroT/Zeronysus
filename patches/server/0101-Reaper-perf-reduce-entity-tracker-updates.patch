@@ -7,7 +7,7 @@ Original code from https://github.com/ruViolence/Reaper
 Licensed under GPL-3.0
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 21d3d8bcdc79107195cbaa9e99442331112dd829..099b3ebb6a8be90e0cbf45b4a21be6f918153a54 100644
+index eccf7902a35a3e28f229ca5861f26760ccea8b36..555600fdb0d1ece52b371f87197ce41abac23fb9 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1371,7 +1371,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
